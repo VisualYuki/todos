@@ -2,15 +2,20 @@ import { Client } from "pg";
 
 export let client: Client;
 
-export async function connectToDatabase() {
+export async function connectToDatabase(dbName: string = "todos") {
   client = new Client({
     port: 5432,
     password: "123",
     user: "postgres",
-    database: "todos",
+    database: dbName,
   });
 
-  await client.connect();
+  try {
+    await client.connect();
+  } catch (err) {
+    console.log(err);
+    debugger;
+  }
 
   return client;
 }

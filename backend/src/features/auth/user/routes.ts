@@ -5,11 +5,11 @@ import { tokenService } from "../token/service";
 import { User } from "./types";
 import { TokenPayload } from "../token/types";
 import { createResponse } from "@/shared/express";
+import { REFRESH_TOKEN_EXPIRES_IN } from "../token";
 
 export const userRouter = express.Router();
 
-userRouter.post("/api/auth", async (req: Request<{}, any, User>, res) => {
-  //try {
+userRouter.post("/auth/login", async (req: Request<{}, any, User>, res) => {
   const { login, password } = req.body;
 
   if (!login || !password) {
@@ -32,7 +32,7 @@ userRouter.post("/api/auth", async (req: Request<{}, any, User>, res) => {
 
     res.cookie("refreshToken", refreshToken.token, {
       httpOnly: true,
-      //maxAge: 1000,
+      maxAge: REFRESH_TOKEN_EXPIRES_IN,
     });
 
     return res.json(
@@ -42,14 +42,11 @@ userRouter.post("/api/auth", async (req: Request<{}, any, User>, res) => {
         },
       })
     );
-  } else {
-    return res.status(401).json(
-      createResponse({
-        error: "invalid auth data",
-      })
-    );
   }
-  // } catch (err) {
-  //next(err);
-  // }
+
+  return res.status(401).json(
+    createResponse({
+      error: "invalid auth data",
+    })
+  );
 });

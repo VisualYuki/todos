@@ -1,60 +1,54 @@
-//import { axiosInstance } from '@/plugins/axios'
-//import type { AxiosResponse } from 'axios'
+import router from '@/core/router'
 import { accessTokenService, type AccessToken } from './accessToken'
-//import router from '@/router'
-import { requestor } from '@/shared/api/requestor'
+import { authApi } from './api'
 
 export const authService = {
-  auth(login: string, password: string) {
-    requestor.post('/api/auth', {
-      login: login,
-      password: password,
-    })
+  async login(login: string, password: string) {
+    const responseData = await authApi.auth({ login, password })
 
-    // axiosInstance
-    //   .post('/auth', {
-    //     login: login,
-    //     password: password,
-    //   })
-    //   .then((response: AxiosResponse<{ accessToken: AccessToken }>) => {
-    //     if (response.data.accessToken) {
-    //       updateAuthData(response.data.accessToken)
-
-    //       router.push('/main')
-    //     }
-    //   })
+    if (responseData) {
+      accessTokenService.set(responseData)
+      return true
+    } else {
+      return false
+    }
+  },
+  async auth() {
+    if (!authService.isAuth()) {
+      return await this.refreshAccessToken()
+    }
+  },
+  setAccessToken(accessToken: AccessToken) {
+    accessTokenService.set(accessToken)
   },
 
-  // async isAuth() {
-  //   const token = accessTokenService.get()
+  isAuth() {
+    const token = accessTokenService.get()
 
-  //   if (token !== undefined && !accessTokenService.isExpired()) {
-  //     return true
-  //   } else {
-  //     const refreshToken = await this.refreshAccessToken()
+    if (token !== undefined && !accessTokenService.isExpired()) {
+      return true
+    } else {
+      return false
+    }
+  },
 
-  //     return refreshToken !== null
-  //   }
-  // },
+  async refreshAccessToken(): Promise<AccessToken | null> {
+    const response = await authApi.refreshToken()
+    if (response) {
+      accessTokenService.set(response)
 
-  // async refreshAccessToken(): Promise<AccessToken | null> {
-  //   try {
-  //     const response = await requestor.post<{ accessToken: AccessToken }>('/auth/refresh')
-  //     if (response.data.accessToken) {
-  //       updateAuthData(response.data.accessToken)
-  //       return response.data.accessToken
-  //     }
-  //     return null
-  //   } catch (error) {
-  //     return null
-  //   }
-  // },
+      return response
+    } else {
+      //router.push({ name: 'login' })
+      return null
+    }
+  },
 
   // logout() {
   //   console.log('logout')
   // },
 }
 
-function updateAuthData(token: AccessToken) {
-  accessTokenService.set(token)
-}
+// function updateAuthData(token: AccessToken) {
+//   accessTokenService.set(token)
+// }

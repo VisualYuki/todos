@@ -15,4 +15,10 @@ export const userDatabase = {
   async initUserSchema(client: Client) {
     await client.query(userSql.create);
   },
+  async insertUser(login: string, password: string) {
+    await client.query(userSql.insertUser, [login, password]);
+  },
+  async deleteUser(login: string) {
+    await client.query(userSql.deleteUser, [login]);
+  },
 };

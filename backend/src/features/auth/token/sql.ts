@@ -1,21 +1,21 @@
 export const tokenSql = {
   create: `
-		CREATE TABLE if not exists refresh_sessions (
-			"login" TEXT NOT NULL UNIQUE,
-			"refresh_token" TEXT NOT NULL,
-			"expires_at" INTEGER
+		CREATE TABLE IF NOT EXISTS refresh_sessions (
+			user_id REFERENCES users, 
+			refresh_token TEXT NOT NULL UNIQUE CHECK (length(refresh_token) > 0),
+			expires_at TEXT NOT NULL CHECK (expires_at > now())
 		)
 	`,
   insert: `
-		insert into refresh_sessions (login, refresh_token, expires_at) values ($1, $2, $3)
+		INSERT INTO refresh_sessions (login, refresh_token, expires_at) VALUES ($1, $2, $3)
 	`,
   deleteByLogin: `
-		delete from refresh_sessions where login = $1
+		DELETE FROM refresh_sessions WHERE login = $1
 	`,
   deleteByToken: `
-		delete from refresh_sessions where refresh_token = $1
+		DELETE FROM refresh_sessions WHERE refresh_token = $1
 	`,
   select: `
-		select * from refresh_sessions where refresh_token = $1
+		SEELCT * FROM refresh_sessions WHERE refresh_token = $1
 	`,
 };

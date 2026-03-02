@@ -20,11 +20,16 @@
 import { InputText, Button, FloatLabel, Password } from 'primevue'
 import { ref } from 'vue'
 import { authService } from '../service'
+import router from '@/core/router'
 
 const login = ref('moshkin-denis')
 const password = ref('moshkin-denis')
 
-function doAuth() {
-  authService.auth(login.value, password.value)
+async function doAuth() {
+  const isLogin = await authService.login(login.value, password.value)
+
+  if (isLogin) {
+    router.push({ name: 'main' })
+  }
 }
 </script>

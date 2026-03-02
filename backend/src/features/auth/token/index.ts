@@ -3,3 +3,4 @@ export * from "./service";
 export * from "./sql";
 export * from "./types";
 export * from "./utils";
+export * from "./routes";

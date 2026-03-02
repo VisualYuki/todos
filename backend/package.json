@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node -r tsconfig-paths/register --transpileOnly ./src/index.ts"
+    "dev": "tsx watch ./src/index.ts --tsconfig tsconfig.json",
+    "migrate": "node-pg-migrate"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cookie": "^1.1.1",
@@ -28,10 +29,9 @@
     "@types/pg": "^8.16.0",
     "@types/supertest": "^6.0.3",
     "dotenv": "^17.2.3",
+    "node-pg-migrate": "^8.0.4",
     "supertest": "^7.1.4",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.0",
     "vitest": "^4.0.9"
   }
-
 }

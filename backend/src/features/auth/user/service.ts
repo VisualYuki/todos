@@ -6,13 +6,13 @@ export const userService = {
   async isValidUser(user: User) {
     const userData = await userDatabase.selectByLogin(user.login);
 
-    if (!user) {
+    if (!user || !userData) {
       return false;
     }
 
     const isValidPassword = await hashUtils.compare(
       user.password,
-      user.password
+      userData.password
     );
 
     if (!isValidPassword) {
