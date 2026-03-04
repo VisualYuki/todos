@@ -1,2 +1,2 @@
-export { userRouter } from "./user";
-export { tokenRouter } from "./token";
+export { loginRouter as userRouter } from "./shared/user";
+export { tokenRouter } from "./shared/token";

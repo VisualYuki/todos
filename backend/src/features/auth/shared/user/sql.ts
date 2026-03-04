@@ -1,7 +1,7 @@
 export const userSql = {
   create: `
     CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
+      id SERIAL PRIMARY KEY ,
       login TEXT NOT NULL UNIQUE CHECK (length(login) > 0),
       password TEXT NOT NULL CHECK (length(password) > 0)
     )
@@ -10,9 +10,12 @@ export const userSql = {
     SELECT * FROM users where $1 = login
   `,
   insertUser: `
-    INSERT INTO users (login, password) VALUES ($1, $2)
+    INSERT INTO users (login, password) VALUES ($1, $2) RETURNING *
   `,
   deleteUser: `
     DELETE FROM users WHERE login = $1
+  `,
+  deleteAll: `
+    DELETE FROM users;
   `,
 };

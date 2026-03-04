@@ -2,7 +2,7 @@ import { app } from "@/core/express";
 import { connectToDatabase, client } from "@/core/database";
 import { userRouter } from "@/features/auth";
 import { userDatabase } from "@/features/auth/user";
-import { tokenDatabase, tokenRouter } from "@/features/auth/token";
+import { tokenDatabase, tokenRouter } from "@/features/auth/shared/token";
 import { todosDatabase } from "./features/todos";
 
 app.use(userRouter);

@@ -14,9 +14,9 @@ import { connectToDatabase } from "@/core/database";
 import { Client } from "pg";
 import { userDatabase } from "./user/database";
 import { hashUtils } from "@/shared/hash";
-import { REFRESH_TOKEN_EXPIRES_IN, tokenDatabase } from "./token";
+import { REFRESH_TOKEN_EXPIRES_IN, tokenDatabase } from "./shared/token";
 import * as cookie from "cookie";
-import { tokenRouter } from "./token/routes";
+import { tokenRouter } from "./refresh-token/routes";
 
 app.use(userRouter);
 app.use(tokenRouter);
@@ -131,7 +131,7 @@ describe("/auth/refresh", () => {
 
   afterEach(async () => {
     try {
-      await tokenDatabase.removeByLogin("login-test");
+      await tokenDatabase.removeByUserId("login-test");
     } catch {}
   });
 

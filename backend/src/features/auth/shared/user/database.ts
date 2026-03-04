@@ -16,9 +16,17 @@ export const userDatabase = {
     await client.query(userSql.create);
   },
   async insertUser(login: string, password: string) {
-    await client.query(userSql.insertUser, [login, password]);
+    const rawData = await client.query<UserDBRow>(userSql.insertUser, [
+      login,
+      password,
+    ]);
+
+    return rawData.rows[0];
   },
   async deleteUser(login: string) {
     await client.query(userSql.deleteUser, [login]);
+  },
+  async deleteAll() {
+    await client.query(userSql.deleteAll);
   },
 };

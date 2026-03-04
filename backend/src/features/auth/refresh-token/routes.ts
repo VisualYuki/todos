@@ -1,7 +1,7 @@
 import { createResponse } from "@/shared/express";
 import express, { type Request } from "express";
-import { tokenDatabase } from "./database";
-import { tokenService } from "./service";
+import { tokenDatabase } from "../shared/token/database";
+import { tokenService } from "../shared/token/service";
 
 export const tokenRouter = express.Router();
 

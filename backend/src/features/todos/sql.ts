@@ -14,9 +14,9 @@ export const todosSql = {
   deleteById: `
 		DELETE FROM todos WHERE id = $1
 	`,
-  deleteByUserId: `
-		DELETE FROM todos WHERE user_id = $1
-	`,
+  //   deleteByUserId: `
+  // 		DELETE FROM todos WHERE user_id = $1
+  // 	`,
   select: `
 		SELECT * FROM todos;
 	`,

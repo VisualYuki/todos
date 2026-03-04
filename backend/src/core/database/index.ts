@@ -2,7 +2,9 @@ import { Client } from "pg";
 
 export let client: Client;
 
-export async function connectToDatabase(dbName: string = "todos") {
+export async function connectToDatabase(
+  dbName: "todos" | "todos-test" = "todos"
+) {
   client = new Client({
     port: 5432,
     password: "123",
@@ -14,7 +16,6 @@ export async function connectToDatabase(dbName: string = "todos") {
     await client.connect();
   } catch (err) {
     console.log(err);
-    debugger;
   }
 
   return client;

@@ -6,10 +6,10 @@ export const tokenService = {
   generateAccessToken(payload: TokenPayload) {
     return tokenUtils.generateAccessToken(payload);
   },
-  generateRefreshToken(payload: TokenPayload) {
+  async generateRefreshToken(payload: TokenPayload, userId: number) {
     const token = tokenUtils.generateRefreshToken(payload);
 
-    tokenDatabase.insert(payload.login, token.token, token.expiresAt);
+    await tokenDatabase.insert(userId, token.token, token.expiresAt);
 
     return token;
   },

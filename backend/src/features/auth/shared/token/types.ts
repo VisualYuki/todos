@@ -1,4 +1,4 @@
-import { User } from "../user/types";
+import { User } from "../../user/types";
 
 export interface RefreshSessionDBRow extends Pick<User, "login"> {
   refresh_token: string;

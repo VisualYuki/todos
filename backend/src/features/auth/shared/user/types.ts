@@ -1,4 +1,5 @@
 export type UserDBRow = {
+  id: number;
   login: string;
   password: string;
 };

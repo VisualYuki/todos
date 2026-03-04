@@ -21,4 +21,13 @@ export const userService = {
 
     return true;
   },
+  async isUserExist(login: User["login"]) {
+    const userData = await userDatabase.selectByLogin(login);
+
+    if (!!userData) {
+      return true;
+    }
+
+    return false;
+  },
 };
