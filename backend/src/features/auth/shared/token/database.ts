@@ -12,10 +12,11 @@ export const tokenDatabase = {
   async removeByUserId(userId: number) {
     await client.query(tokenSql.deleteByUserId, [userId]);
   },
-  async select(token: string) {
-    const rawData = await client.query<RefreshSessionDBRow>(tokenSql.select, [
-      token,
-    ]);
+  async selectByToken(token: string) {
+    const rawData = await client.query<RefreshSessionDBRow>(
+      tokenSql.selectByToken,
+      [token]
+    );
 
     return rawData.rows[0];
   },

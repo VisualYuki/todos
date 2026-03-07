@@ -1,4 +1,5 @@
 import express, { type Request } from "express";
+import * as v from "valibot";
 
 import { parseUser, userDatabase, userService } from "../shared/user";
 import { tokenService } from "../shared/token/service";
@@ -6,7 +7,6 @@ import { User } from "../shared/user/types";
 import { TokenPayload } from "../shared/token/types";
 import { createResponse } from "@/shared/express";
 import { REFRESH_TOKEN_EXPIRES_IN } from "../shared/token";
-import * as v from "valibot";
 
 export const loginRouter = express.Router();
 
@@ -25,11 +25,10 @@ loginRouter.post("/auth/login", async (req: Request<{}, any, User>, res) => {
   const isValidUser = await userService.isValidUser({ login, password });
 
   if (isValidUser) {
-    const payload: TokenPayload = {
-      login,
-    };
-
     const { id } = await userDatabase.selectByLogin(login);
+    const payload: TokenPayload = {
+      userId: id,
+    };
 
     const accessToken = tokenService.generateAccessToken(payload);
     const refreshToken = await tokenService.generateRefreshToken(payload, id);
@@ -49,7 +48,7 @@ loginRouter.post("/auth/login", async (req: Request<{}, any, User>, res) => {
   } else {
     return res.status(401).json(
       createResponse({
-        error: "invalid auth data",
+        error: "login or password is invalid",
       })
     );
   }

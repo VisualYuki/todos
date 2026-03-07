@@ -3,7 +3,7 @@ import { userDatabase, userSql } from "../shared/user";
 import { connectToDatabase } from "@/core/database";
 import { REFRESH_TOKEN_EXPIRES_IN, tokenDatabase } from "../shared/token";
 import { Client } from "pg";
-import { app } from "@/core/express";
+import { createApp } from "@/core/express";
 import request from "supertest";
 import { registrationRouter } from "./routes";
 import { parseSetCookie } from "cookie";
@@ -11,6 +11,7 @@ import { parseSetCookie } from "cookie";
 let client: Client;
 const testLogin = "correct-login";
 const testPassword = "correct-password";
+const app = createApp();
 
 beforeAll(async () => {
   client = await connectToDatabase("todos-test");

@@ -13,7 +13,7 @@ tokenRouter.post("/auth/refresh", async (req: Request<{}, any, any>, res) => {
       .status(401)
       .json(createResponse({ error: "refresh token is required" }));
 
-  const refreshSession = await tokenDatabase.select(refreshToken);
+  const refreshSession = await tokenDatabase.selectByToken(refreshToken);
 
   if (!refreshSession) {
     return res
@@ -28,7 +28,7 @@ tokenRouter.post("/auth/refresh", async (req: Request<{}, any, any>, res) => {
   }
 
   const accessToken = tokenService.generateAccessToken({
-    login: refreshSession.login,
+    userId: refreshSession.user_id,
   });
 
   return res.json(

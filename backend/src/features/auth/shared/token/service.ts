@@ -14,7 +14,7 @@ export const tokenService = {
     return token;
   },
   isRefreshTokenExist(token: string) {
-    const refreshToken = tokenDatabase.select(token);
+    const refreshToken = tokenDatabase.selectByToken(token);
 
     if (!refreshToken) {
       return false;
@@ -23,7 +23,7 @@ export const tokenService = {
     return true;
   },
   isRefreshTokenExpired(token: string) {
-    const refreshSession = tokenDatabase.select(token);
+    const refreshSession = tokenDatabase.selectByToken(token);
 
     if (!refreshSession) return true;
 

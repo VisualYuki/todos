@@ -1,12 +1,16 @@
 import { app } from "@/core/express";
 import { connectToDatabase, client } from "@/core/database";
-import { userRouter } from "@/features/auth";
-import { userDatabase } from "@/features/auth/user";
-import { tokenDatabase, tokenRouter } from "@/features/auth/shared/token";
-import { todosDatabase } from "./features/todos";
+import { loginRouter, registrationRouter } from "@/features/auth";
+import { userDatabase } from "@/features/auth";
+import { tokenDatabase } from "@/features/auth";
+import { tokenRouter } from "@/features/auth/index";
+import { todosDatabase } from "@/features/todos";
+import { todosRouter } from "@/features/todos";
 
-app.use(userRouter);
+app.use(registrationRouter);
+app.use(loginRouter);
 app.use(tokenRouter);
+app.use(todosRouter);
 
 async function main() {
   await connectToDatabase();

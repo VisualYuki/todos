@@ -15,8 +15,8 @@ export const tokenSql = {
   deleteByToken: `
 		DELETE FROM refresh_sessions WHERE refresh_token = $1
 	`,
-  select: `
-		SEELCT * FROM refresh_sessions WHERE refresh_token = $1
+  selectByToken: `
+		SELECT * FROM refresh_sessions WHERE refresh_token = $1
 	`,
   deleteAll: `
 		DELETE FROM refresh_sessions;

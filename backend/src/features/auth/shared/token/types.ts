@@ -1,11 +1,12 @@
-import { User } from "../../user/types";
+import { User } from "../user/types";
 
-export interface RefreshSessionDBRow extends Pick<User, "login"> {
+export interface RefreshSessionDBRow {
+  user_id: number;
   refresh_token: string;
   expires_at: number | null;
 }
 
-export type TokenPayload = Pick<User, "login">;
+export type TokenPayload = { userId: RefreshSessionDBRow["user_id"] };
 
 export type ReturnToken = {
   token: string;

@@ -1,6 +1,7 @@
 import express, { type Request } from "express";
-import { User } from "../shared/user/types";
 import * as v from "valibot";
+
+import { User } from "../shared/user/types";
 import { createResponse } from "@/shared/express";
 import { parseUser, userDatabase, userService } from "../shared/user";
 import {
@@ -46,7 +47,7 @@ registrationRouter.post(
     }
 
     const payload: TokenPayload = {
-      login,
+      userId: userId,
     };
 
     const accessToken = tokenService.generateAccessToken(payload);

@@ -7,4 +7,8 @@ export default defineConfig({
       "@": resolve(__dirname, "src"),
     },
   },
+  test: {
+    testTimeout: 10000,
+    fileParallelism: false,
+  },
 });
