@@ -29,13 +29,13 @@ afterEach(async () => {
 });
 
 describe("/auth/refresh", () => {
-  it("return error if refresh token isn't set", async () => {
+  it("returns error response if refresh token isn't set", async () => {
     const res2 = await request(app).post("/auth/refresh").expect(401);
 
     expect(res2.body.error).toBe("refresh token is required");
   });
 
-  it("return error if refresh token is invalid", async () => {
+  it("returns error response if refresh token is invalid", async () => {
     const res = await request(app)
       .post("/auth/refresh")
       .set("Cookie", [`refreshToken=foo`])
@@ -44,7 +44,7 @@ describe("/auth/refresh", () => {
     expect(res.body.error).toBe("refresh token is not exist");
   });
 
-  it("success refresh token", async () => {
+  it("returns success response with refresh and access token", async () => {
     const res = await request(app).post("/auth/registration").send({
       login: testLogin,
       password: testPassword,
@@ -62,7 +62,7 @@ describe("/auth/refresh", () => {
     expect(res2.body.data.accessToken).toBeTruthy();
   });
 
-  it("return error if refresh token is expired", async () => {
+  it("returns error response if refresh token is expired", async () => {
     const res1 = await request(app)
       .post("/auth/registration")
       .send({
@@ -74,7 +74,6 @@ describe("/auth/refresh", () => {
     const refreshCookie = cookie.parseSetCookie(res1.headers["set-cookie"][0]);
 
     vi.useFakeTimers();
-
     vi.setSystemTime(Date.now() + REFRESH_TOKEN_EXPIRES_IN * 1000 + 5000);
 
     const res2 = await request(app)
@@ -83,5 +82,28 @@ describe("/auth/refresh", () => {
       .expect(401);
 
     expect(res2.body.error).toBe("refresh token is expired");
+  });
+
+  it("returns success response if access token is expired and refresh token is not expired", async () => {
+    const res1 = await request(app)
+      .post("/auth/registration")
+      .send({
+        login: testLogin,
+        password: testPassword,
+      })
+      .expect(200);
+
+    const refreshCookie = cookie.parseSetCookie(res1.headers["set-cookie"][0]);
+
+    vi.useFakeTimers();
+    vi.setSystemTime(Date.now() + REFRESH_TOKEN_EXPIRES_IN * 1000 - 2000);
+
+    const res2 = await request(app)
+      .post("/auth/refresh")
+      .set("Cookie", [`refreshToken=${refreshCookie.value}`])
+      .expect(200);
+
+    expect(res2.body.data).toHaveProperty("accessToken");
+    expect(res2.body.data.accessToken).toBeTruthy();
   });
 });

@@ -3,8 +3,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { ReturnToken, TokenPayload } from "./types";
 export const ACCESS_TOKEN_SECRET = "access-secret-example";
 export const REFRESH_TOKEN_SECRET = "refresh-secret-example";
-export const ACCESS_TOKEN_EXPIRES_IN = 30;
-export const REFRESH_TOKEN_EXPIRES_IN = 60;
+export const ACCESS_TOKEN_EXPIRES_IN = 60 * 15; // 15 minutes
+export const REFRESH_TOKEN_EXPIRES_IN = 60 * 60 * 24; // 1 day
 
 export const tokenUtils = {
   generateToken(payload: TokenPayload, secret: string, expiresIn: number) {

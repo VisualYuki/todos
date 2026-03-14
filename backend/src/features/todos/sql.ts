@@ -18,10 +18,29 @@ export const todosSql = {
   //   deleteByUserId: `
   // 		DELETE FROM todos WHERE user_id = $1
   // 	`,
-  select: `
+  selectAll: `
 		SELECT * FROM todos WHERE user_id = $1;
 	`,
+
   deleteAll: `
 		DELETE * from todos;
+	`,
+  updateTitle: `
+		UPDATE todos 
+			SET title = $1
+			WHERE id = $2
+			RETURNING *
+	`,
+  updateDescription: `
+		UPDATE todos 
+			SET description = $1
+			WHERE id = $2
+			RETURNING *
+	`,
+  updateCompleted: `
+		UPDATE todos 
+			SET completed = $1
+			WHERE id = $2
+			RETURNING *
 	`,
 };

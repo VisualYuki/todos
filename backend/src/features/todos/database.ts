@@ -7,8 +7,8 @@ export const todosDatabase = {
   async initTodosSchema(client: Client) {
     return await client.query(todosSql.create);
   },
-  async selectByUserId(user_id: number) {
-    return await client.query(todosSql.select, [user_id]);
+  async selectByUserId(userId: number) {
+    return (await client.query(todosSql.selectAll, [userId])).rows;
   },
   async insert(data: {
     userId: number;
@@ -25,7 +25,27 @@ export const todosDatabase = {
 
     return result.rows[0];
   },
+  async deleteById(id: number) {
+    try {
+      const result = await client.query(todosSql.deleteById, [id]);
+    } catch {
+      return false;
+    }
+
+    return true;
+  },
   async deleteAll() {
     return await client.query(todosSql.deleteAll);
+  },
+  async updateTitle(id, title) {
+    return (await client.query(todosSql.updateTitle, [title, id])).rows[0];
+  },
+  async updateDescription(id, description) {
+    return (await client.query(todosSql.updateDescription, [description, id]))
+      .rows[0];
+  },
+  async updateCompleted(id, completed) {
+    return (await client.query(todosSql.updateCompleted, [completed, id]))
+      .rows[0];
   },
 };

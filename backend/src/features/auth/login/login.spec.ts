@@ -28,49 +28,58 @@ afterEach(async () => {
 });
 
 describe("", async () => {
-  it("error response if login and password is empty", async () => {
-    const res = await request(app)
-      .post("/auth/login")
-      .send({ login: "", password: "" });
+  describe("data validation", () => {
+    it("login request returns error response if login and password is empty", async () => {
+      const res = await request(app)
+        .post("/auth/login")
+        .send({ login: "", password: "" });
 
-    expect(res.status).toBe(400);
+      expect(res.status).toBe(400);
+      expect(res.body.error).toBeTruthy();
+    });
 
-    expect(res.body.error).toBeTruthy();
+    it("login request returns error response if login and password is not string", async () => {
+      const res = await request(app)
+        .post("/auth/login")
+        .send({ login: undefined, password: "" });
+
+      expect(res.status).toBe(400);
+      expect(res.body.error).toBeTruthy();
+    });
+
+    it("login request returns error response if login length is less than 4", async () => {
+      const res = await request(app)
+        .post("/auth/login")
+        .send({ login: "123", password: testPassword });
+
+      expect(res.status).toBe(400);
+      expect(res.body.error.login).toBeTruthy();
+    });
+
+    it("login request returns error response if password length is less than 8", async () => {
+      const res = await request(app)
+        .post("/auth/login")
+        .send({ login: testLogin, password: "1234567" });
+
+      expect(res.status).toBe(400);
+      expect(res.body.error.password).toBeTruthy();
+    });
   });
 
-  it("error response if login and password is not string", async () => {
+  it("login request returns error response if login or password is invalid", async () => {
     const res = await request(app)
       .post("/auth/login")
-      .send({ login: undefined, password: "" });
+      .send({ login: "invalid-login", password: "invalid-password" });
 
-    expect(res.status).toBe(400);
-    expect(res.body.error).toBeTruthy();
+    expect(res.status).toBe(401);
+    expect(res.body.error).toBe("login or password is invalid");
   });
 
-  it("error response if login length is less than 4", async () => {
-    const res = await request(app)
-      .post("/auth/login")
-      .send({ login: "123", password: testPassword });
-
-    expect(res.status).toBe(400);
-    expect(res.body.error.login).toBeTruthy();
-  });
-
-  it("error response if password length is less than 8", async () => {
-    const res = await request(app)
-      .post("/auth/login")
-      .send({ login: testLogin, password: "1234567" });
-
-    expect(res.status).toBe(400);
-    expect(res.body.error.password).toBeTruthy();
-  });
-
-  describe("success response", () => {
-    it("200 response", async () => {
+  describe("login request returns success response", () => {
+    it("success response have 200 status", async () => {
       const registrationRes = await request(app)
         .post("/auth/registration")
-        .send({ login: testLogin, password: testPassword })
-        .expect(200);
+        .send({ login: testLogin, password: testPassword });
 
       const loginRes = await request(app)
         .post("/auth/login")
@@ -78,16 +87,14 @@ describe("", async () => {
         .expect(200);
     });
 
-    it("with accessToken and refreshToken", async () => {
+    it("success response have access and refresh token", async () => {
       const registrationRes = await request(app)
         .post("/auth/registration")
-        .send({ login: testLogin, password: testPassword })
-        .expect(200);
+        .send({ login: testLogin, password: testPassword });
 
       const loginRes = await request(app)
         .post("/auth/login")
-        .send({ login: testLogin, password: testPassword })
-        .expect(200);
+        .send({ login: testLogin, password: testPassword });
 
       const cookies = parseSetCookie(loginRes.headers["set-cookie"][0]);
 
