@@ -1,4 +1,3 @@
-import router from '@/core/router'
 import { accessTokenService, type AccessToken } from './accessToken'
 import { authApi } from './api'
 
@@ -6,8 +5,19 @@ export const authService = {
   async login(login: string, password: string) {
     const responseData = await authApi.auth({ login, password })
 
-    if (responseData) {
-      accessTokenService.set(responseData)
+    if (responseData?.accessToken) {
+      accessTokenService.set(responseData.accessToken)
+      return true
+    } else {
+      return false
+    }
+  },
+
+  async registration(login: string, password: string) {
+    const responseData = await authApi.registration({ login, password })
+
+    if (responseData?.accessToken) {
+      accessTokenService.set(responseData.accessToken)
       return true
     } else {
       return false
@@ -34,21 +44,15 @@ export const authService = {
 
   async refreshAccessToken(): Promise<AccessToken | null> {
     const response = await authApi.refreshToken()
-    if (response) {
-      accessTokenService.set(response)
-
-      return response
+    if (response?.accessToken) {
+      accessTokenService.set(response.accessToken)
+      return response.accessToken
     } else {
-      //router.push({ name: 'login' })
       return null
     }
   },
 
-  // logout() {
-  //   console.log('logout')
-  // },
+  logout() {
+    accessTokenService.clear()
+  },
 }
-
-// function updateAuthData(token: AccessToken) {
-//   accessTokenService.set(token)
-// }

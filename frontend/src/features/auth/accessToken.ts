@@ -20,8 +20,13 @@ function isExpired(): boolean {
   return accessToken.expiresAt < Date.now() - SAFE_TIME
 }
 
+function clear() {
+  accessToken = undefined
+}
+
 export const accessTokenService = {
   set,
   get,
   isExpired,
+  clear,
 }

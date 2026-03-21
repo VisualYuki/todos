@@ -1,8 +1,4 @@
-import axios, { AxiosError, type AxiosRequestConfig, type AxiosResponse } from 'axios'
-//import { accessTokenService } from './accessToken'
-//import type { ResponseTemplate } from '@/types'
-//import { authService } from './auth'
-import router from '@/core/router'
+import axios, { AxiosError, type AxiosRequestConfig } from 'axios'
 import type { ApiResponse } from './types'
 import { accessTokenService, type AccessToken } from '@/features/auth/accessToken'
 import { authService } from '@/features/auth/service'
@@ -19,8 +15,14 @@ export const axiosInstance = axios.create({
   withCredentials: true,
 })
 
+type RequestBody = Record<string, string | number | boolean | undefined>
+
 export const requestor = {
-  async makeRequest<data>(method: REQUEST_METHOD, url: string, data?: { [index: string]: string }) {
+  async makeRequest<data>(
+    method: REQUEST_METHOD,
+    url: string,
+    data?: RequestBody
+  ) {
     const requestConfig: AxiosRequestConfig = { headers: {} }
 
     requestConfig.url = url
@@ -31,23 +33,16 @@ export const requestor = {
 
       if (accessToken) {
         authService.setAccessToken(accessToken)
-
-        //if(route)
       }
     }
 
-    // const isAccessTokenSet = await setAccessToken(requestConfig)
-
-    //debugger
-    // if (router.currentRoute.value.path !== '/auth') {
-    //   router.push('/auth')
-    // }
-
-    // if (!isAccessTokenSet) {
-    //   return
-    // }
-
     requestConfig['data'] = data
+
+    const token = accessTokenService.get()
+    if (token) {
+      requestConfig.headers = requestConfig.headers ?? {}
+      requestConfig.headers['Authorization'] = token.token
+    }
 
     return await axiosInstance<ApiResponse<data>>(requestConfig)
       .then(async (response) => {
@@ -73,21 +68,20 @@ export const requestor = {
       })
   },
 
-  async post<data>(url: string, data = {}) {
+  async post<data>(url: string, data: RequestBody = {}) {
     return await this.makeRequest<data>(REQUEST_METHOD.POST, url, data)
   },
 
-  async refreshToken() {
-    return await axiosInstance<ApiResponse<AccessToken>>({ url: '/auth/refresh', method: 'POST' })
+  async refreshToken(): Promise<AccessToken | false> {
+    return await axiosInstance<ApiResponse<{ accessToken: AccessToken }>>({
+      url: '/auth/refresh',
+      method: 'POST',
+    })
       .then(async (response) => {
-        return response.data.data
+        return response.data.data?.accessToken ?? false
       })
-      .catch(async (error: AxiosError<ApiResponse>) => {
+      .catch((): AccessToken | false => {
         return false
-
-        //throw new Error('fgfg')
-
-        //return response.response?.data || {data: null, error: true, message: ''}
       })
   },
 }
