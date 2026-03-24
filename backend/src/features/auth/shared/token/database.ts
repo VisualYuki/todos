@@ -10,7 +10,6 @@ export const tokenDatabase = {
     await client.query(tokenSql.insert, [userId, refreshToken, expiresAt]);
   },
   async removeByUserId(userId: number) {
-    debugger;
     await client.query(tokenSql.deleteByUserId, [userId]);
   },
   async selectByToken(token: string) {
