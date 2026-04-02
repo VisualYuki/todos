@@ -7,25 +7,18 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/shared/layout/Layout.vue'),
-
+      redirect: { name: 'login' },
       children: [
-        // {
-        //   path: 'auth',
-        //   redirect: { name: 'login' },
-        //   children: [
-
-        //     // {
-        //     //   path: 'registration',
-        //     //   component: () => import('@/features/auth/pages/Auth.vue'),
-        //     //   meta: {
-        //     //     requiredAuth: false,
-        //     //   },
-        //     // },
-        //   ],
-        // },
+        {
+          path: 'signup',
+          component: () => import('@/features/auth/pages/Signup.vue'),
+          meta: {
+            requiredAuth: false,
+          },
+        },
         {
           path: 'login',
-          component: () => import('@/features/auth/pages/Auth.vue'),
+          component: () => import('@/features/auth/pages/Login.vue'),
           name: 'login',
           meta: {
             requiredAuth: false,
@@ -56,7 +49,7 @@ router.beforeEach(async (to, from) => {
   }
 
   if (!to.meta.requiredAuth) {
-    if (!isAuth) {
+    if (isAuth) {
       return { name: 'main' }
     }
   }

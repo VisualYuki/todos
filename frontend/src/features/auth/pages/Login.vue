@@ -1,23 +1,25 @@
 <template>
   <div class="flex items-center justify-center h-screen w-full">
     <div class="max-w-[400px] w-max">
-      <FloatLabel class="mb-8">
-        <label for="login">Login</label>
-        <InputText v-model="login" placeholder="login" inputId="login" />
-      </FloatLabel>
+      <ElForm labelPosition="top">
+        <ElFormItem label="Login">
+          <ElInput v-model="login" />
+        </ElFormItem>
 
-      <FloatLabel class="mb-4">
-        <label for="password">Password</label>
-        <Password v-model="password" :feedback="false" placeholder="password" inputId="password" />
-      </FloatLabel>
+        <ElFormItem label="Password">
+          <ElInput v-model="password" type="password" placeholder="password" />
+        </ElFormItem>
 
-      <Button @click="doAuth" class="w-full"> auth </Button>
+        <br />
+
+        <ElButton @click="doAuth" class="w-full"> Log in </ElButton>
+      </ElForm>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { InputText, Button, FloatLabel, Password } from 'primevue'
+import { ElButton, ElInput, ElForm, ElFormItem } from 'element-plus'
 import { ref } from 'vue'
 import { authService } from '../service'
 import router from '@/core/router'

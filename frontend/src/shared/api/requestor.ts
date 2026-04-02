@@ -26,15 +26,15 @@ export const requestor = {
     requestConfig.url = url
     requestConfig.method = method.toLowerCase()
 
-    if (accessTokenService.isExpired()) {
-      const accessToken = await this.refreshToken()
+    // if (accessTokenService.isExpired()) {
+    //   const accessToken = await this.refreshToken()
 
-      if (accessToken) {
-        authService.setAccessToken(accessToken)
+    //   if (accessToken) {
+    //     authService.setAccessToken(accessToken)
 
-        //if(route)
-      }
-    }
+    //     //if(route)
+    //   }
+    // }
 
     // const isAccessTokenSet = await setAccessToken(requestConfig)
 
@@ -51,9 +51,11 @@ export const requestor = {
 
     return await axiosInstance<ApiResponse<data>>(requestConfig)
       .then(async (response) => {
+        debugger
         return response.data.data
       })
       .catch(async (error: AxiosError<ApiResponse>) => {
+        debugger
         if (error.response) {
           // showNotification(
           //   response.response.config.url,
@@ -78,16 +80,14 @@ export const requestor = {
   },
 
   async refreshToken() {
-    return await axiosInstance<ApiResponse<AccessToken>>({ url: '/auth/refresh', method: 'POST' })
-      .then(async (response) => {
-        return response.data.data
-      })
-      .catch(async (error: AxiosError<ApiResponse>) => {
-        return false
-
-        //throw new Error('fgfg')
-
-        //return response.response?.data || {data: null, error: true, message: ''}
-      })
+    // return await axiosInstance<ApiResponse<AccessToken>>({ url: '/auth/refresh', method: 'POST' })
+    //   .then(async (response) => {
+    //     return response.data.data
+    //   })
+    //   .catch(async (error: AxiosError<ApiResponse>) => {
+    //     return false
+    //     //throw new Error('fgfg')
+    //     //return response.response?.data || {data: null, error: true, message: ''}
+    //   })
   },
 }

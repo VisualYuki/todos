@@ -4,7 +4,7 @@ import { authApi } from './api'
 
 export const authService = {
   async login(login: string, password: string) {
-    const responseData = await authApi.auth({ login, password })
+    const responseData = await authApi.login({ login, password })
 
     if (responseData) {
       accessTokenService.set(responseData)
@@ -13,6 +13,7 @@ export const authService = {
       return false
     }
   },
+  async signup(login: string, password: string) {},
   async auth() {
     if (!authService.isAuth()) {
       return await this.refreshAccessToken()
